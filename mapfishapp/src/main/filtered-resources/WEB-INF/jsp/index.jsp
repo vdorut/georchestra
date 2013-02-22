@@ -137,7 +137,8 @@ if(sec_roles != null) {
         loading custom parameters (see build profile)
     -->
     <script type="text/javascript" src="app/js/GEOR_custom.js"></script>
-    
+    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
     <c:choose>
         <c:when test='<%= request.getParameter("debug") != null %>'>
     <%@ include file="debug-includes.jsp" %>

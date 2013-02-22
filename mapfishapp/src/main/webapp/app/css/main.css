@@ -433,3 +433,24 @@ div.olMapViewport {
 .x-menu-list .x-menu-item-checked {
 	font-weight: bold;
 }
+
+/* Google in OpenLayers */
+.olLayerGoogleCopyright {
+    right: 3px;
+    bottom: 2px;
+    left: auto;
+}
+.olLayerGoogleV3.olLayerGoogleCopyright {
+    bottom: 0px;
+    right: 0px !important;
+}
+.olLayerGooglePoweredBy {
+    left: 2px;
+    bottom: 2px;
+}
+.olLayerGoogleV3.olLayerGooglePoweredBy {
+    bottom: 15px !important;
+}
+div.gmnoprint a {
+	display: none;
+}
