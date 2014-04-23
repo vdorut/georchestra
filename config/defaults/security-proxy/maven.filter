@@ -29,3 +29,4 @@ private.ssl=
 proxy.defaultTarget=
 proxy.mapping=
 header.mapping=
+acl.mapping=
