@@ -428,6 +428,20 @@ GEOR.map = (function() {
             tr = OpenLayers.i18n;
             SCALES = GEOR.config.MAP_SCALES;
             return createLayerStore();
+        },
+
+        /**
+         * APIMethod: requiresOWSContext
+         *
+         * Returns:
+         * {Boolean} True if the map has WMTS layers
+         */
+        requiresOWSContext: function() {
+            var b = false;
+            Ext.each(map.layers, function(l) {
+                b = b || l.CLASS_NAME == "OpenLayers.Layer.WMTS";
+            });
+            return b;
         }
     };
 })();

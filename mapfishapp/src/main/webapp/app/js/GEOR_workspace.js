@@ -47,14 +47,23 @@ GEOR.workspace = (function() {
      */
     var saveBtnHandler = function() {
         var formPanel = this.findParentByType('form'), 
-            form = formPanel.getForm();
+            form = formPanel.getForm(), data;
         GEOR.waiter.show();
+        // TODO: this logic should probably be encapusalted inside the GEOR.wmc module ?
+        var md = {
+            "title": form.findField('title').getValue(),
+            "abstract": form.findField('abstract').getValue()
+        };
+        if (true || GEOR.map.requiresOWSContext()) { // FIXME: remove true when owscontext works ! (just for testing)
+            data = GEOR.wmc.write(md, "owc");
+            service = GEOR.config.PATHNAME + "/ws/owc/";
+        } else {
+            data = GEOR.wmc.write(md);
+            service = GEOR.config.PATHNAME + "/ws/wmc/";
+        }
         OpenLayers.Request.POST({
-            url: GEOR.config.PATHNAME + "/ws/wmc/",
-            data: GEOR.wmc.write({
-                title: form.findField('title').getValue(),
-                "abstract": form.findField('abstract').getValue()
-            }),
+            url: service,
+            data: data,
             success: function(response) {
                 formPanel.ownerCt.close();
                 var o = Ext.decode(response.responseText);

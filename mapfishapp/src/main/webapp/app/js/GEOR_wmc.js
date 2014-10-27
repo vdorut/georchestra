@@ -155,6 +155,29 @@ GEOR.wmc = (function() {
     };
 
 
+    /**
+     * Method: writeOwsContext
+     * Writes an OWS context object given a layer store.
+     *
+     * Parameters:
+     * ls - {GeoExt.data.LayerStore} The layer store.
+     *
+     * Returns:
+     * {Object} An ows context object.
+     */
+    var writeOwsContext = function(ls) {
+        var context = owsContextFormat.toContext(ls.map);
+        context.layers = [];
+        ls.each(function(record) {
+            var layer = record.get('layer');
+            if ((layer instanceof OpenLayers.Layer.WMS) || 
+                (layer instanceof OpenLayers.Layer.WMTS)) {
+                context.layers.push(layer);
+            }
+        });
+        return context;
+    };
+
     return {
 
         /*
@@ -192,16 +215,27 @@ GEOR.wmc = (function() {
          *
          * Parameters:
          * options - {Object} options overriding map context
+         * format - {String} "wmc" (the default) or "owc" for OWSContext 0.3.1
          *
          * Returns:
          * {String} The WMC string.
          */
-        write: function(options) {
-            var context = Ext.apply(
-                writeWmcContext(layerStore), 
-                options || {}
-            );
-            return wmcFormat.write(context, {
+        write: function(options, format) {
+            var context, f;
+            if (format == "owc") {
+                context = Ext.apply(
+                    writeOwsContext(layerStore),
+                    options || {}
+                );
+                f = owsContextFormat;
+            } else {
+                context = Ext.apply(
+                    writeWmcContext(layerStore),
+                    options || {}
+                );
+                f = wmcFormat;
+            }
+            return f.write(context, {
                 id: Math.random().toString(16).substr(2)
             });
         },

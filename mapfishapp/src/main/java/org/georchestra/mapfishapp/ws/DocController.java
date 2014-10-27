@@ -83,6 +83,11 @@ public class DocController {
     public static final String WMC_URL = DOC_URL + "wmc/";
     
     /**
+     * Absolute (from domain name) URL path where the OWS Context service can be called
+     */
+    public static final String OWC_URL = DOC_URL + "owc/";
+
+    /**
      * Absolute (from domain name) URL path where the csv service can be called
      */
     public static final String CSV_URL = DOC_URL + "csv/";
@@ -119,6 +124,28 @@ public class DocController {
     @RequestMapping(value="/wmc/*", method=RequestMethod.GET)
     public void getWMCFile(HttpServletRequest request, HttpServletResponse response) { 
         getFile(new WMCDocService(this.docTempDir, this.connectionPool), request, response);
+    }
+    
+    /*======================= OWC ======================================================================*/
+    
+    /**
+     * POST OWC entry point. Store the body of the request POST (or file by upload) in a temporary file.
+     * @param request contains in its body the wmc file
+     * @param response contains the url path to get back the file: OWC_URL/{filename}
+     */
+    @RequestMapping(value="/owc/", method=RequestMethod.POST)
+    public void storeOWCFile(HttpServletRequest request, HttpServletResponse response) {   
+        storeFile(new OWSContextDocService(this.docTempDir, this.connectionPool), WMC_URL, request, response);   
+    }
+    
+    /**
+     * GET OWC entry point. Retrieve the right file previously stored corresponding to the REST argument. <br />
+     * @param request no parameter. The parameter has to be provided REST style: OWC_URL/{filename}
+     * @param response contains the file content
+     */
+    @RequestMapping(value="/owc/*", method=RequestMethod.GET)
+    public void getOWCFile(HttpServletRequest request, HttpServletResponse response) { 
+        getFile(new OWSContextDocService(this.docTempDir, this.connectionPool), request, response);
     }
 
     /*======================= KML =====================================================================*/
