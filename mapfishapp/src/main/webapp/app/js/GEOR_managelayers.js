@@ -26,6 +26,8 @@
  * @include GEOR_ows.js
  * @include GEOR_util.js
  * @include GEOR_querier.js
+ * @include GEOR_styler.js
+ * @include GEOR_rasterstyler.js
  * @include GEOR_selectfeature.js
  */
 
@@ -731,6 +733,19 @@ GEOR.managelayers = (function() {
                 listeners: {
                     "click": function(btn, pressed) {
                         GEOR.styler.create(layerRecord, this.el);
+                    }
+                }
+            });
+        }
+
+        if (GEOR.rasterstyler && hasEquivalentWCS) {
+            insertSep();
+            menuItems.push({
+                iconCls: 'geor-btn-style',
+                text: tr("Edit colormap"),
+                listeners: {
+                    "click": function(btn, pressed) {
+                        GEOR.rasterstyler.create(layerRecord, this.el);
                     }
                 }
             });

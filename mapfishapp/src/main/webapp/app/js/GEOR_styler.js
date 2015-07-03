@@ -822,6 +822,7 @@ GEOR.styler = (function() {
          * has an SLD param
          */
         var url = wmsLayerRecord.get("layer").params.SLD;
+        // TODO: if no SLD url, then try to fetch style from GetStyles WMS request :-)
         if (url) {
             getSLD(url);
         }

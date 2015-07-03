@@ -539,6 +539,7 @@ Ext.namespace("GEOR");
                     GEOR.edit.deactivate();
                 }
                 GEOR.styler.deactivate();
+                GEOR.rasterstyler.deactivate();
                 GEOR.selectfeature.deactivate();
                 GEOR.getfeatureinfo.deactivate();
                 southPanel.collapse();
@@ -548,6 +549,15 @@ Ext.namespace("GEOR");
         if (GEOR.styler) {
             GEOR.styler.events.on({
                 "sldready": function(layerRecord, sld) {
+                    updateLayerParams(layerRecord, sld, null);
+                    GEOR.managelayers.unselectStyles(layerRecord);
+                }
+            });
+        }
+
+        if (GEOR.rasterstyler) {
+            GEOR.rasterstyler.events.on({
+                "sldready": function(layerRecord, sld) { // FIXME: duplication du code ci-dessus
                     updateLayerParams(layerRecord, sld, null);
                     GEOR.managelayers.unselectStyles(layerRecord);
                 }
