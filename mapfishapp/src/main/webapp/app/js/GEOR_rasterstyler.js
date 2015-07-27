@@ -94,13 +94,8 @@ GEOR.rasterstyler = (function() {
 
     var colormapTypeComboValue;
 
-    //~ var isDirty = function() {
-        //~ if (editor) {
-            //~ return editor.isDirty();
-        //~ } else {
-            //~ return true;
-        //~ }
-    //~ };
+    // array of info extracted from describecoverage
+    var bands;
 
     /**
      * Method: applyStyling
@@ -228,15 +223,15 @@ GEOR.rasterstyler = (function() {
                     // our set of rules
                     dirty = false;
 
-                    //mask.hide();
+                    mask.hide();
                     callback.apply(scope, [true, sldURL]);
                 };
                 var failure = function(response) {
-                    //mask.hide();
+                    mask.hide();
                     callback.apply(scope, [false]);
                 };
-                //mask.msg = tr("Saving SLD");
-                //mask.show();
+                mask.msg = tr("Saving SLD");
+                mask.show();
                 Ext.Ajax.request({
                     url: GEOR.config.PATHNAME + "/ws/sld/",
                     method: "POST",
@@ -263,15 +258,7 @@ GEOR.rasterstyler = (function() {
      * {String} The SLD string.
      */
     var createSLD = function(rules) {
-        /*
-        if (!validateRules(rules)) {
-            GEOR.util.errorDialog({
-                msg: tr("Some classes are invalid, verify that all fields " +
-                    "are correct")
-            });
-            return null;
-        }
-        */
+
         return new OpenLayers.Format.SLD().write({
             "namedLayers": [{
                 "name": wcsInfo.get("identifier"),
@@ -297,8 +284,8 @@ GEOR.rasterstyler = (function() {
         if (!url) {
             return;
         }
-        //mask.msg = tr("Get SLD");
-        //mask.show();
+        mask.msg = tr("Get SLD");
+        mask.show();
         // define the callbacks
         var success = function(request) {
             var doc = request.responseXML;
@@ -331,14 +318,15 @@ GEOR.rasterstyler = (function() {
                 //colormapTypeCombo.selectByValue(c.type); // FIXME : combo UI does not exist yet !
                 colormapTypeComboValue = s.colorMap.type; // FIXME : does not work either because combo has already been created.
                 //debugger;
+                
                 // TODO: restore the band selection from style
                 // valeur = s.channelSelection.grayChannel.sourceChannelName
 
-                //mask.hide();
+                mask.hide();
                 dirty = false;
                 sldURL = url;
             } else {
-                //mask.hide();
+                mask.hide();
                 Ext.Msg.alert(
                     tr("Error"),
                     tr("Malformed SLD")
@@ -346,7 +334,7 @@ GEOR.rasterstyler = (function() {
             }
         };
         var failure = function(request) {
-            //mask.hide();
+            mask.hide();
         };
         Ext.Ajax.request({
             method: "GET",
@@ -356,6 +344,9 @@ GEOR.rasterstyler = (function() {
         });
     };
 
+    /**
+     * Method: createEmptyEntry
+     */
     var createEmptyEntry = function() {
         var e = new ColormapEntry({
             quantity: '0.0',
@@ -372,6 +363,13 @@ GEOR.rasterstyler = (function() {
     };
 
     /**
+     * Method: setDirty
+     */
+    var setDirty =  function(){
+        dirty = true;
+    };
+
+    /**
      * Method: initStyler.
      * This method is executed once the WMSDescribeLayerStore
      * is loaded, it is responsible for initializing the styler.
@@ -384,7 +382,7 @@ GEOR.rasterstyler = (function() {
         // TODO: get band data from DescribeCoverage request
         var bandStore = new Ext.data.ArrayStore({
             fields: ['key'],
-            data: [['BAND 1', 'RED_BAND'], ['GREEN_BAND'], ['BLUE_BAND']]
+            data: bands
         });
 
         ColormapEntry = Ext.data.Record.create([{
@@ -409,8 +407,8 @@ GEOR.rasterstyler = (function() {
             },
             listeners: {
                 // we need to mark the sld as dirty when the user changes the colormap:
-                "update": function(){dirty = true;},
-                "remove": function(){dirty = true;} // FIXME
+                "update": setDirty,
+                "remove": setDirty
             }
         });
 
@@ -423,7 +421,6 @@ GEOR.rasterstyler = (function() {
             }
         });
 
-        //debugger;
         colormapTypeCombo = new Ext.form.ComboBox({
             store: colormapTypeStore,
             displayField: "display",
@@ -437,7 +434,7 @@ GEOR.rasterstyler = (function() {
             value: colormapTypeComboValue || colormapTypeStore.getAt(0).get("value"), // FIXME
             listeners: {
                 // we need to mark the sld as dirty when the user changes the value:
-                "change": function(){dirty = true;} // FIXME (setDirty method)
+                "change": setDirty
             }
         });
 
@@ -590,7 +587,7 @@ GEOR.rasterstyler = (function() {
         // if url is defined getURL takes care
         // of hiding the mask
         if (!url) {
-            //mask && mask.hide();
+            mask && mask.hide();
         }
     };
 
@@ -631,6 +628,7 @@ GEOR.rasterstyler = (function() {
             // clear cache:
             mask = null;
             wmsLayerRecord = layerRecord;
+            bands = [];
 
             colormapTypeStore = new Ext.data.ArrayStore({
                 fields: ['value', 'display'],
@@ -678,27 +676,16 @@ GEOR.rasterstyler = (function() {
                 }],
                 listeners: {
                     "afterrender": function() {
-                        /*
+                        
                         mask = new Ext.LoadMask(win.body, {
                             msg: tr("Loading...")
                         });
                         mask.show();
-                        */
 
-                        // fixme: callback after describecoverage:
-                        initStyler();
                     }
                 }
             });
             win.show();
-/*
-
-<WMS_DescribeLayerResponse version="1.1.1">
-    <LayerDescription name="nasa:night_2012" owsURL="http://sdi.georchestra.org/geoserver/wcs?" owsType="WCS">
-    <Query typeName="nasa:night_2012"/>
-</LayerDescription>
-
-*/
 
 
 
@@ -707,44 +694,59 @@ GEOR.rasterstyler = (function() {
                 {name: "owsURL", type: "string"},
                 {name: "identifier", type: "string"}
             ]);
+                
             var data = {
                 "owsURL": layerRecord.get("WCS_URL"),
                 "identifier": layerRecord.get("WCS_typeName")
             };
             wcsInfo = new recordType(data);
+            
+            
+            
 
-            /*
-            attributes = GEOR.ows.WCSDescribeCoverage(wcsInfo, {
-                success: function(st, recs, opts) {
-                    // extract & remove geometry column name
-
-                    var idx = st.find('type', GEOR.ows.matchGeomProperty);
-                    if (idx > -1) {
-                        // we have a geometry
-                        var r = st.getAt(idx);
-                        geometryName = r.get('name');
-                        st.remove(r);
+            Ext.Ajax.request({
+                url: layerRecord.get("WCS_URL").replace(/\?$/,''),
+                method: 'GET',
+                disableCaching: false,
+                headers: {
+                    "Content-Type": "application/xml; charset=UTF-8"
+                },
+                params: {
+                    "SERVICE": "WCS",
+                    "REQUEST": "DescribeCoverage",
+                    "IDENTIFIERS": layerRecord.get("WCS_typeName"),
+                    "VERSION": "1.1.1" // TODO: set the same everywhere in this module
+                },
+                success: function(resp) {
+                    var data = resp.responseXML;
+                    if (!data || !data.documentElement) {
+                        data = resp.responseText;
                     }
-                    if (st.getCount() > 0) {
-                        // we have at least one attribute that we can style
-                        getSymbolType(initStyler);
-                    } else {
-                        // give up
-                        giveup([
-                            tr("Impossible to complete the operation:"),
-                            tr("no available attribute")
-                        ].join(" "));
-                    }
+                    var format = new OpenLayers.Format.WCSDescribeCoverage({
+                        version: "1.1.1"
+                    });
+                    var o = format.read(data),
+                        desc = o && o.coverageDescriptions[layerRecord.get("WCS_typeName")],
+                        // there are strong assumptions below (1 field / 1 axis)
+                        b = desc && desc.range.fields[0].axes[0].availableKeys;
 
+                    Ext.each(b, function(bi) {
+                        bands.push([bi, bi]);
+                    });
+                    
+                    initStyler();
+                    
                 },
                 failure: function() {
+                    // give up
+                    giveup(tr("DescribeCoverage failure"));  // FIXME
+                    
                     mask && mask.hide();
                     win.close();
-                }
+                },
+                scope: this
             });
-
-*/
-
+            
         }
     };
 })();
