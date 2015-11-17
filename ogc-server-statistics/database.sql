@@ -17,6 +17,7 @@ CREATE TABLE ogc_services_log (
   id bigserial NOT NULL,
   request character varying(20),
   org character varying(255),
+  secrole text[],
   CONSTRAINT primary_key PRIMARY KEY (id )
 );
 
