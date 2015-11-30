@@ -180,7 +180,7 @@ public class GroupsControllerTest {
         assertTrue(ret.getString("description").equals("Description for the group"));
         assertTrue(response.getStatus() == HttpServletResponse.SC_OK);
     }
-
+    // TODO changer les deux test
     @Test
     public void testDelete() throws Exception {
         request.setRequestURI("/groups/ADMINISTRATOR");
@@ -191,7 +191,18 @@ public class GroupsControllerTest {
         assertTrue(response.getStatus() == HttpServletResponse.SC_OK);
         assertTrue(ret.getBoolean("success") == true);
     }
+   
+    @Test
+    public void testDeleteADMIN() throws Exception {
+        request.setRequestURI("/groups/ADMINISTRATOR");
 
+        groupCtrl.delete(request, response);
+
+        JSONObject ret = new JSONObject(response.getContentAsString());
+        assertTrue(response.getStatus() == HttpServletResponse.SC_OK);
+        
+        assertTrue(ret.getBoolean("success") == true);
+    }
 
 
     @Test

@@ -73,6 +73,16 @@
     <property name="userSearchBaseDN" value="${userSearchBaseDN}"/>
     <property name="groupSearchBaseDN" value="${groupSearchBaseDN}"/>
   </bean>
+  
+  <bean id="protectedGroupsBean" class="org.georchestra.ldapadmin.ProtectedGroupsBean" init-method="init">
+  	<property name="protectedGroups">
+  		<list>
+  			<value>SV_*</value>
+  			<value>ADMINISTRATOR</value>
+  			<value>MOD_*</value>
+		</list>
+  	</property>
+  </bean>
 
   <bean id="accountDao" class="org.georchestra.ldapadmin.ds.AccountDaoImpl">
     <constructor-arg ref="ldapTemplate"/>

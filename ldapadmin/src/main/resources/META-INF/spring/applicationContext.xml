@@ -7,20 +7,26 @@
         then be used within application context files in the form of
         ${propertyKey}.
     -->
-    <context:property-placeholder location="classpath*:META-INF/spring/*.properties"/>
-    <!--
-        Turn on AspectJ @Configurable support. As a result, any time you
-        instantiate an object, Spring will attempt to perform dependency
-        injection on that object. This occurs for instantiation via the "new"
-        keyword, as well as via reflection. This is possible because AspectJ
-        is used to "weave" Roo-based applications at compile time. In effect
-        this feature allows dependency injection of any object at all in your
-        system, which is a very useful feature (without @Configurable you'd
-        only be able to dependency inject objects acquired from Spring or
-        subsequently presented to a specific Spring dependency injection
-        method). Roo applications use this useful feature in a number of
-        areas, such as @PersistenceContext injection into entities.
-    -->
+
+<!--		 
+	<context:property-override
+		location="file:${georchestra.datadir}/ldpadmin/ldapgroups.properties"
+		order="1" ignore-resource-not-found="true" />
+	 using the one from the geOrchestra datadir first (if available) 
+	<context:property-placeholder
+		location="file:${georchestra.datadir}/geonetwork/geonetwork.properties"
+		ignore-resource-not-found="true" ignore-unresolvable="true" order="1" /> -->
+	<!-- Add ldap authentication to authentication manager -->
+	<!-- Turn on AspectJ @Configurable support. As a result, any time you instantiate 
+		an object, Spring will attempt to perform dependency injection on that object. 
+		This occurs for instantiation via the "new" keyword, as well as via reflection. 
+		This is possible because AspectJ is used to "weave" Roo-based applications 
+		at compile time. In effect this feature allows dependency injection of any 
+		object at all in your system, which is a very useful feature (without @Configurable 
+		you'd only be able to dependency inject objects acquired from Spring or subsequently 
+		presented to a specific Spring dependency injection method). Roo applications 
+		use this useful feature in a number of areas, such as @PersistenceContext 
+		injection into entities. -->
     <context:spring-configured/>
     <!--
         This declaration will cause Spring to locate every @Component,
@@ -68,6 +74,7 @@
     </bean>
     <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
      -->
+	
      
     <!-- 
     <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">

@@ -14,8 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.georchestra.ldapadmin.ds.*;
-import org.georchestra.ldapadmin.dto.Account;
+import org.georchestra.commons.configuration.GeorchestraConfiguration;
+import org.georchestra.ldapadmin.ProtectedGroupsBean;
+import org.georchestra.ldapadmin.ds.DataServiceException;
+import org.georchestra.ldapadmin.ds.DuplicatedCommonNameException;
+import org.georchestra.ldapadmin.ds.GroupDao;
+import org.georchestra.ldapadmin.ds.NotFoundException;
+import org.georchestra.ldapadmin.ds.ProtectedUserFilter;
 import org.georchestra.ldapadmin.dto.Group;
 import org.georchestra.ldapadmin.dto.GroupFactory;
 import org.georchestra.ldapadmin.dto.GroupSchema;
@@ -31,6 +36,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+
 /**
  * Web Services to maintain the Groups information.
  *
@@ -39,7 +45,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 
 @Controller
-
 public class GroupsController {
 
 	private static final Log LOG = LogFactory.getLog(GroupsController.class.getName());
@@ -55,16 +60,14 @@ public class GroupsController {
 
 	private static final String USER_NOT_FOUND = "user_not_found";
 
-	private static final String VIRTUAL_TEMPORARY_GROUP_NAME = "TEMPORARY_USER";
-	private static final String VIRTUAL_TEMPORARY_GROUP_DESCRIPTION = "Virtual group that contains all temporary users";
-
-
-	@Autowired
-	private AccountDao accountDao;
 
 	private GroupDao groupDao;
 	private ProtectedUserFilter filter;
 
+	@Autowired
+    private GeorchestraConfiguration georConfig;
+
+	
         /**
      * Builds a JSON response in case of error.
      *
@@ -100,15 +103,16 @@ public class GroupsController {
 	@RequestMapping(value=REQUEST_MAPPING, method=RequestMethod.GET)
 	public void findAll( HttpServletRequest request, HttpServletResponse response ) throws IOException{
 
+		
+		
 		try {
 			List<Group> list = this.groupDao.findAll();
 
 			GroupListResponse listResponse = new GroupListResponse(list, this.filter);
 
-			JSONArray jsonList = listResponse.toJsonArray();
-			jsonList.put(this.extractTemporaryGroupInformation());
+			String jsonList = listResponse.toJsonArray().toString();
 
-			ResponseUtil.buildResponse(response, jsonList.toString(4), HttpServletResponse.SC_OK);
+			ResponseUtil.buildResponse(response, jsonList, HttpServletResponse.SC_OK);
 
 		} catch (Exception e) {
 
@@ -140,12 +144,9 @@ public class GroupsController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value=REQUEST_MAPPING+"/*", method=RequestMethod.GET)
-	public void findByCN( HttpServletRequest request, HttpServletResponse response) throws IOException, JSONException {
+	public void findByCN( HttpServletRequest request, HttpServletResponse response) throws IOException{
 
 		String cn = RequestUtil.getKeyFromPathVariable(request);
-
-		if(cn.equals(GroupsController.VIRTUAL_TEMPORARY_GROUP_NAME))
-			ResponseUtil.buildResponse(response, this.extractTemporaryGroupInformation().toString(), HttpServletResponse.SC_OK);
 
 		// searches the group
 		Group group = null;
@@ -176,20 +177,6 @@ public class GroupsController {
 
 		ResponseUtil.buildResponse(response, jsonGroup, HttpServletResponse.SC_OK);
 
-	}
-
-	private JSONObject extractTemporaryGroupInformation() throws JSONException {
-		JSONObject res = new JSONObject();
-		res.put("cn", GroupsController.VIRTUAL_TEMPORARY_GROUP_NAME);
-		res.put("description", GroupsController.VIRTUAL_TEMPORARY_GROUP_DESCRIPTION);
-
-		// Search temporary users in LDAP
-		JSONArray temporaryUsers = new JSONArray();
-		for(Account a : this.accountDao.findByShadowExpire())
-			temporaryUsers.put(a.getUid());
-		res.put("users",temporaryUsers);
-
-		return res;
 	}
 
 	/**
@@ -267,15 +254,27 @@ public class GroupsController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value=REQUEST_MAPPING + "/*", method=RequestMethod.DELETE)
-	public void delete( HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			String cn = RequestUtil.getKeyFromPathVariable(request);
+	
 
+	
+	@RequestMapping(value=REQUEST_MAPPING + "/*", method=RequestMethod.DELETE)
+
+	public void delete( HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+		try{
+			
+			String cn = RequestUtil.getKeyFromPathVariable(request);
+			ProtectedGroupsBean groups = new ProtectedGroupsBean();
+			groups.init();
+			
+			//if(!groups.getProtectedGroups().contains(cn)){
+				
 			this.groupDao.delete(cn);
 
 			ResponseUtil.writeSuccess(response);
-
+			//}
+		//	else { ResponseUtil.buildResponse(response, ""  ); }
+				
 		} catch (NotFoundException e) {
 	          LOG.error(e.getMessage());
 	            ResponseUtil.buildResponse(response, buildErrorResponse(e.getMessage()),
@@ -505,3 +504,30 @@ public class GroupsController {
 
 
 }
+/*
+@Component
+class GroupsRequired {
+  @Value("${my.properties.groups}")
+  private String[] myValues;
+  
+  public GroupsRequired(){
+	  
+  }
+  
+  public String[] getGroupsRequired(){
+	  return this.myValues; 
+  }
+  
+  }
+
+@ConfigurationProperties(prefix="my")
+public class Config {
+
+    private List<String> servers = new ArrayList<String>();
+
+    public List<String> getServers() {
+        return this.servers;
+    }
+}
+  
+*/
