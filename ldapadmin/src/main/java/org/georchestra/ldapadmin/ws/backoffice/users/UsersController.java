@@ -37,10 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Web Services to maintain the User information.
@@ -107,6 +104,7 @@ public class UsersController {
 	 * @param response
 	 * @throws IOException
 	 */
+	@CrossOrigin(methods = RequestMethod.OPTIONS)
 	@RequestMapping(value=REQUEST_MAPPING, method=RequestMethod.GET)
 	public void findAll( HttpServletRequest request, HttpServletResponse response ) throws IOException{
 
