@@ -20,10 +20,17 @@
         </div>
 
         <div class="panel-body" ng-if="user.tab=='infos'">
+<<<<<<< HEAD
 
           <div class="row">
             <div class="col-sm-6">
               <form class="form-horizontal">
+=======
+          <form class="form-horizontal">
+            <div class="row">
+              <div class="col-md-6">
+
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
                 <div class="form-group">
                   <label class="col-sm-4" for="uid">Login</label>
                   <div class="col-sm-8">
@@ -84,12 +91,18 @@
                   </div>
                 </div>
 
+<<<<<<< HEAD
                 <button ng-click="user.save()" type="submit" class="btn btn-primary">Enregistrer</button>
               </form>
             </div>
 
             <div class="col-sm-6">
               <form class="form-horizontal ">
+=======
+              </div>
+
+              <div class="col-md-6">
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
                 <div class="form-group">
                   <label class="col-sm-4" for="givenName">Password</label> <a>Re-initialiser</a>
                 </div>
@@ -123,6 +136,14 @@
               </form>
             </div>
           </div>
+<<<<<<< HEAD
+=======
+
+        </div>
+
+        <div class="panel-footer" ng-if="user.tab=='infos'">
+          <button ng-click="user.save()" type="submit" class="btn btn-primary">Enregistrer</button>
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
         </div>
 
         <div class="panel-body" ng-if="user.tab=='groups'">
@@ -132,7 +153,11 @@
             <div class="col-sm-6" ng-repeat="group in user.adminGroups">
               <div class="checkbox">
                 <label>
+<<<<<<< HEAD
                   <input type="checkbox"> {{::group}}
+=======
+                  <input type="checkbox" ng-model="user.user.adminGroups[group]"> {{::group}}
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
                 </label>
               </div>
             </div>
@@ -142,9 +167,14 @@
 
           <h4 translate>group.app</h4>
           <div class="form-group">
+<<<<<<< HEAD
              <select class="form-control" multiple chosen ng-model="user.user.groups" 
               ng-options="group for group in user.groups" data-placeholder="Select groups">
               <option ng-repeat="(key, group) in user.groups" value="{{::group.cn}}">{{::group.cn}}</option>
+=======
+            <select class="form-control" multiple chosen ng-model="user.user.groups" ng-options="group for group in user.groups"
+            data-placeholder="Select groups">
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
             </select>
           </div>
         </div>
@@ -155,28 +185,55 @@
 
         <div class="panel-body" ng-if="user.tab=='messages'">
           <ol class="breadcrumb">
+<<<<<<< HEAD
             <li class="active" ng-if="!user.message"><span translate>msg.messages</span>
               <span class="badge">{{::user.messages.length}}</span>
             </li>
             <li ng-if="user.message">
               <a href="javascript:void(0);" ng-click="user.closeMessage()"> <span translate>msg.messages</span> <span class="badge">{{::user.messages.length}}</span>
+=======
+            <li class="active" ng-if="!user.message">
+              <span translate>msg.messages</span> <span class="badge">{{::user.messages.length}}</span>
+            </li>
+            <li ng-if="user.message">
+              <a href="javascript:void(0);" ng-click="user.closeMessage()">
+                <span translate>msg.messages</span> <span class="badge">{{::user.messages.length}}</span>
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
               </a>
             </li>
             <li class="active" ng-if="user.message">{{::user.message.subject}}</li>
           </ol>
           <div ng-if="user.message">
             <h4>
+<<<<<<< HEAD
        <small> {{user.message.sender}}, <span translate>msg.on</span>
         {{user.message.date | date: 'mediumDate'}}
        </small>
       </h4>
             <h4>{{user.message.subject}}</h4>
             <p>{{user.message.body}}</p>
+=======
+              <small>
+                {{user.message.sender}}, <span translate>msg.on</span> {{user.message.date | date: 'mediumDate'}}
+              </small>
+            </h4>
+            <h4>
+              {{user.message.subject}}
+            </h4>
+            <p>
+              {{user.message.body}}
+            </p>
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
             <hr ng-if="user.message.attachments.length>0" />
             <h5 ng-if="user.message.attachments.length>0" translate>msg.attachments</h5>
             <ul ng-if="user.message.attachments.length>0">
               <li ng-repeat="attachment in user.message.attachments">
+<<<<<<< HEAD
                 {{attachment.name}} ({{attachment.size / 1000 | number:0}} Mo)</li>
+=======
+                {{attachment.name}} ({{attachment.size / 1000 | number:0}} Mo)
+              </li>
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
             </ul>
           </div>
           <table class="table table-condensed" ng-if="!user.message">

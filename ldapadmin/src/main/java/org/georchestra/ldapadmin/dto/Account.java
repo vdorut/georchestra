@@ -139,4 +139,11 @@ public interface Account {
 
 	Date getShadowExpire();
 
+	String getManager();
+	
+	void setManager(String manager);
+	
+	String getContext();
+	
+	void setContext(String context);
 }

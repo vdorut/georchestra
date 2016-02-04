@@ -9,7 +9,12 @@ angular.module('admin_console')
 function UserController($routeParams, $q, Flash, User, Group, Email,
     groupAdminList, groupAdminFilter) {
   this.tab = $routeParams.tab;
+<<<<<<< HEAD
   this.user = User.get({id : $routeParams.id}, function() {
+=======
+  this.flash = Flash;
+  this.user = User.get({id : $routeParams.id}, function(user) {
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
     if (this.tab == 'messages') {
       Email.query({id: this.user.uuid}, function(r) {
         // this.messages = r.emails;
@@ -62,11 +67,19 @@ function UserController($routeParams, $q, Flash, User, Group, Email,
         this.groups.$promise
       ]).then(function() {
         this.user.groups = this.user.groups || [];
+<<<<<<< HEAD
         this.user.adminGroups = this.user.adminGroups || [];
         this.groups.forEach(function(group) {
           if (group.users.indexOf(this.user.uid)>=0) {
             if (groupAdminFilter(group)) {
               this.user.adminGroups.push(group.cn);
+=======
+        this.user.adminGroups = this.user.adminGroups || {};
+        this.groups.forEach(function(group) {
+          if (group.users.indexOf(this.user.uid)>=0) {
+            if (groupAdminFilter(group)) {
+              this.user.adminGroups[group.cn] = true;
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
             } else {
               this.user.groups.push(group.cn);
             }
@@ -82,6 +95,7 @@ function UserController($routeParams, $q, Flash, User, Group, Email,
   }
 }
 
+<<<<<<< HEAD
 UserController.prototype.activate = [ '$scope', '$cacheFactory',
     'LDAP_BASE_URI', 'GroupsUsers', 'Flash',
     function($scope, $cacheFactory, baseUri, GroupsUsers, Flash) {
@@ -113,10 +127,53 @@ UserController.prototype.activate = [ '$scope', '$cacheFactory',
       Flash.create('error', 'Error associating to groups');
     });
   }.bind(this));
+=======
+UserController.prototype.activate = [
+    '$scope', '$cacheFactory', 'LDAP_BASE_URI', 'GroupsUsers',
+    function($scope, $cacheFactory, baseUri, GroupsUsers) {
+
+  var $httpDefaultCache = $cacheFactory.get('$http');
+  var saveGroups = function(newVal, oldVal) {
+    if (!newVal || !oldVal) { return; }
+
+    var toPut = newVal.filter(function(a) { return oldVal.indexOf(a) == -1; });
+    var toDel = oldVal.filter(function(a) { return newVal.indexOf(a) == -1; });
+
+    if (toPut.length == 0 && toDel.length == 0) { return; }
+    if (toPut.length > 1 || toDel.length > 1) { return; } // Batch operations are wrong artifacts
+
+    GroupsUsers.save({
+      users: [ this.user.uid ],
+      PUT: toPut,
+      DELETE: toDel
+    }, function() {
+      this.flash.create('success', 'Groups updated');
+      $httpDefaultCache.removeAll(); // $httpDefaultCache.remove(baseUri + 'groups');
+    }.bind(this), function() {
+      this.flash.create('error', 'Error associating to groups');
+    }.bind(this));
+  }
+
+  $scope.$watch(function(){
+    return this.user.groups;
+  }.bind(this), saveGroups.bind(this));
+
+  $scope.$watchCollection(function(){
+    var groups = [];
+    for (g in this.user.adminGroups) {
+      if (this.user.adminGroups[g]) {
+        groups.push(g);
+      }
+    }
+    return groups;
+  }.bind(this), saveGroups.bind(this));
+
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a
 }];
 
 UserController.prototype.save = function() {
   this.user.$update(function(r) {
+<<<<<<< HEAD
     r.$promise.then(function(user) {
       console.log(arguments[0]);
       // console.log(arguments);
@@ -134,3 +191,19 @@ UserController.prototype.openMessage = function(message) {
 UserController.prototype.closeMessage = function(message) {
   delete this.message;
 }
+=======
+    // FIXME : reset user values from controller new response
+    this.flash.create('success', 'User updated');
+  }.bind(this), function() {
+    this.flash.create('error', 'Error associating to groups');
+  }.bind(this));
+};
+
+UserController.prototype.openMessage = function(message) {
+  this.message = message;
+};
+
+UserController.prototype.closeMessage = function(message) {
+  delete this.message;
+};
+>>>>>>> 9eef3da5d3ff3a1998f3bcbce3d8b7c2a66c822a

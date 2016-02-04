@@ -135,6 +135,9 @@ public final class AccountDaoImpl implements AccountDao {
             DirContextAdapter context = new DirContextAdapter(dn);
             mapToContext(uniqueNumber, account, context);
 
+            // Maps the password separately
+            context.setAttributeValue(UserSchema.USER_PASSWORD_KEY, account.getPassword());
+
             this.ldapTemplate.bind(dn, context, null);
 
             this.groupDao.addUser(groupID, account.getUid());
@@ -470,6 +473,11 @@ public final class AccountDaoImpl implements AccountDao {
         setAccountField(context, UserSchema.ORG_UNIT_KEY, account.getOrganizationalUnit());
         
         setAccountField(context, UserSchema.HOME_POSTAL_ADDRESS_KEY, account.getHomePostalAddress());
+
+        if(account.getManager() != null)
+            setAccountField(context, UserSchema.MANAGER, account.getManager());
+        
+        setAccountField(context, UserSchema.CONTEXT, account.getContext());
     }
 
     private void setAccountField(DirContextOperations context, String fieldName, Object value) {
@@ -522,7 +530,9 @@ public final class AccountDaoImpl implements AccountDao {
                     context.getStringAttribute(UserSchema.HOME_POSTAL_ADDRESS_KEY),
                     context.getStringAttribute(UserSchema.MOBILE_KEY),
                     context.getStringAttribute(UserSchema.ROOM_NUMBER_KEY),
-                    context.getStringAttribute(UserSchema.STATE_OR_PROVINCE_KEY));
+                    context.getStringAttribute(UserSchema.STATE_OR_PROVINCE_KEY),
+                    context.getStringAttribute(UserSchema.MANAGER),
+                    context.getStringAttribute(UserSchema.CONTEXT));
 
             account.setUUID(context.getStringAttribute(UserSchema.UUID_KEY));
             String rawShadowExpire = context.getStringAttribute(UserSchema.SHADOW_EXPIRE);
