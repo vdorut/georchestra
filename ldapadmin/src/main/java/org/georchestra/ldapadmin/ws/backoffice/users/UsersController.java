@@ -1,6 +1,22 @@
-/**
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
  *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.georchestra.ldapadmin.ws.backoffice.users;
 
 
@@ -19,7 +35,6 @@ import org.georchestra.ldapadmin.ds.AccountDao;
 import org.georchestra.ldapadmin.ds.DataServiceException;
 import org.georchestra.ldapadmin.ds.DuplicatedEmailException;
 import org.georchestra.ldapadmin.ds.DuplicatedUidException;
-import org.georchestra.ldapadmin.ds.NotFoundException;
 import org.georchestra.ldapadmin.ds.ProtectedUserFilter;
 import org.georchestra.ldapadmin.dto.Account;
 import org.georchestra.ldapadmin.dto.AccountFactory;
@@ -109,7 +124,8 @@ public class UsersController {
 	 */
 	@RequestMapping(value=REQUEST_MAPPING, method=RequestMethod.GET)
 	public void findAll( HttpServletRequest request, HttpServletResponse response ) throws IOException{
-
+		List protectedUsers = this.userRule.getListUidProtected();
+		int i = 0;
 		try {
 			ProtectedUserFilter filter = new ProtectedUserFilter( this.userRule.getListUidProtected() );
 			List<Account> list = this.accountDao.findFilterBy(filter);
@@ -167,11 +183,11 @@ public class UsersController {
 	 *
 	 * @param response Returns the detailed information of the user as json
 	 * @throws IOException
-	 * @throws NotFoundException 
+	 * @throws NameNotFoundException
 	 */
 	@RequestMapping(value=REQUEST_MAPPING+"/{uid}", method=RequestMethod.GET,
 					produces = "application/json; charset=UTF-8")
-	public void findByUid(@PathVariable String uid, HttpServletResponse response) throws IOException, JSONException, NotFoundException {
+	public void findByUid(@PathVariable String uid, HttpServletResponse response) throws IOException, JSONException, NameNotFoundException {
 
 		// Check for protected accounts
 		if(this.userRule.isProtected(uid) ){
@@ -282,7 +298,14 @@ public class UsersController {
 				return;
 			}
 
-			storeUser(account);
+			String adminUUID = null;
+			try {
+				adminUUID = this.accountDao.findByUID(request.getHeader("sec-username")).getUUID();
+			} catch (NameNotFoundException e) {
+				LOG.error("Unable to find admin/user connected, so no admin log generated when creating uid : " + account.getUid());
+			}
+
+			storeUser(account, adminUUID);
 
 			UserResponse userResponse = new UserResponse(account);
 
@@ -320,10 +343,9 @@ public class UsersController {
 	 * @throws DataServiceException
 	 * @throws IOException
 	 */
-	private void storeUser(Account account) throws DuplicatedEmailException, DataServiceException, IOException {
+	private void storeUser(Account account, String originUUID) throws DuplicatedEmailException, DataServiceException, IOException {
 		try {
-
-			this.accountDao.insert(account, Group.SV_USER);
+			this.accountDao.insert(account, Group.SV_USER, originUUID);
 
 		} catch (DuplicatedEmailException e) {
 			throw e;
@@ -376,10 +398,10 @@ public class UsersController {
 	 * @param response
 	 *
 	 * @throws IOException if the uid does not exist or fails to access to the LDAP store.
-	 * @throws NotFoundException 
+	 * @throws NameNotFoundException
 	 */
 	@RequestMapping(value=REQUEST_MAPPING+ "/*", method=RequestMethod.PUT)
-	public void update( HttpServletRequest request, HttpServletResponse response) throws IOException, NotFoundException{
+	public void update( HttpServletRequest request, HttpServletResponse response) throws IOException, NameNotFoundException{
 
 		final String uid = RequestUtil.getKeyFromPathVariable(request).toLowerCase();
 
@@ -414,7 +436,14 @@ public class UsersController {
 		// modifies the account data
 		try{
 			final Account modified = modifyAccount(AccountFactory.create(account), request.getInputStream());
-			this.accountDao.update(account, modified);
+			String adminUUID;
+			try {
+				Account adminAccount = this.accountDao.findByUID(request.getHeader("sec-username"));
+				adminUUID = adminAccount == null ? null : adminAccount.getUUID();
+			} catch (NameNotFoundException ex){
+				adminUUID = null;
+			}
+			this.accountDao.update(account, modified, adminUUID);
 			boolean uidChanged = ( ! modified.getUid().equals(account.getUid()));
 			if ((uidChanged) && (warnUserIfUidModified)) {
 				this.mailService.sendAccountUidRenamed(request.getSession().getServletContext(),
@@ -434,7 +463,7 @@ public class UsersController {
 			LOG.error(e.getMessage());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			throw new IOException(e);
-		} catch (NotFoundException e) {
+		} catch (NameNotFoundException e) {
 			LOG.error(e.getMessage());
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		}
@@ -468,7 +497,14 @@ public class UsersController {
 				return;
 			}
 
-			this.accountDao.delete(uid);
+			String adminUUID = null;
+			try {
+				adminUUID = this.accountDao.findByUID(request.getHeader("sec-username")).getUUID();
+			} catch (NameNotFoundException e) {
+				LOG.error("Unable to find admin/user connected, so no admin log generated when deleting uid : " + uid);
+			}
+
+			this.accountDao.delete(uid, adminUUID);
 
 			ResponseUtil.writeSuccess(response);
 
@@ -476,7 +512,7 @@ public class UsersController {
 			LOG.error(e.getMessage());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IOException(e);
-		} catch (NotFoundException e) {
+		} catch (NameNotFoundException e) {
             String jsonResponse = ResponseUtil.buildResponseMessage(Boolean.FALSE, NOT_FOUND);
             ResponseUtil.buildResponse(response, jsonResponse, HttpServletResponse.SC_NOT_FOUND);
 		}
