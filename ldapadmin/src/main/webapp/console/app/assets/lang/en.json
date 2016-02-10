@@ -9,6 +9,22 @@
 
    "user.updated"    : "User updated",
    "user.error"      : "Error while saving user",
+   "user.save"       : "Save",
+   "user.login"      : "Login",
+   "user.cn"         : "Last Name",
+   "user.mail"       : "E-mail",
+   "user.address"    : "Address",
+   "user.org"        : "Organization",
+   "user.description": "Description",
+   "user.manager"    : "Manager",
+   "user.expire"     : "Expire",
+   "user.context"    : "Context",
+   "user.reset"      : "Reset",
+   "user.password"   : "Password",
+   "user.gn"         : "First Name",
+   "user.phone"      : "Phone",
+   "user.fax"        : "Fax",
+   "user.title"      : "Title",
 
    "group.system"    : "System groups",
    "group.app"       : "Application groups",
@@ -27,4 +43,5 @@
    "msg.send"        : "Send",
    "msg.sent"        : "Message sent!",
    "msg.error"       : "Error sending message"
+   
 }
