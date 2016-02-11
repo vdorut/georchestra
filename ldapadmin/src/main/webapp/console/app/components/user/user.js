@@ -178,3 +178,8 @@ UserController.prototype.sendMail = function() {
     this.flash.create.bind(this, 'error', $translate('msg.error'))
   );
 }
+
+UserController.prototype.resetPassword = function(user) {
+  window.location.href=['/ldapadmin/account/passwordRecovery?email='+encodeURIComponent(user)];
+}
+
