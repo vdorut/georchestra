@@ -180,6 +180,134 @@ UserController.prototype.sendMail = function() {
 }
 
 UserController.prototype.resetPassword = function(user) {
+  
   window.location.href=['/ldapadmin/account/passwordRecovery?email='+encodeURIComponent(user)];
 }
+
+
+
+/*
+UserController.prototype.factory('mainInfo', function($http) { 
+  return {
+      get:  function(){
+          $http.get('https://sdi.georchestra.org/mapfishapp/ws/contexts/'); // this will return a promise to controller
+      }
+});
+
+mainInfo.get().then(function(response) { 
+  $scope.foo = response.data.contentItem;
+});
+
+
+
+
+
+UserController.prototype.context = ['$scope', '$http', '$templateCache',
+function($scope, $http, $templateCache) {
+
+  $scope.method = 'GET';
+  $scope.url = 'https://sdi.georchestra.org/mapfishapp/ws/contexts/';
+
+  $scope.fetch = function() {
+    $scope.code = null;
+    $scope.response = null;
+
+    $http({method: $scope.method, url: $scope.url, cache: $templateCache}).
+      then(function(response) {
+        $scope.status = response.status;
+        $scope.data = response.data;
+      }, function(response) {
+        $scope.data = response.data || "Request failed";
+        $scope.status = response.status;
+    });
+  };
+
+  $scope.updateModel = function(method, url) {
+    $scope.method = method;
+    $scope.url = url;
+
+console.log($scope.data);
+alert($scope.data);
+    
+  };
+}];
+
+UserController.prototype.context = [ '$scope', '$resource',
+                                     function($scope, $resource) {
+  
+  $http({method: 'GET', url: '/someUrl'}).success(function(data, status, headers, config) {
+  
+  var UserContext = $resource('mapfishapp/ws/contexts/:label', {label:'@id'});
+  alert("yolo0");
+  $scope.data= {
+      availableOptions: [
+                         {
+                           "keywords": ["relief"],
+                           "label": "geOrchestra World",
+                           "thumbnail": "context/image/relief.png",
+                           "tip": "This map displays geOrchestra instances on top of a world DEM baselayer",
+                           "wmc": "context/relief.wmc"
+                       },
+                       {
+                           "keywords": ["default"],
+                           "label": "OSM Map over Western Europa",
+                           "thumbnail": "context/image/default.png",
+                           "tip": "Uses a layer made from regularly updated OpenStreetMap data, rendered with a GoogleMaps-inspired style.",
+                           "wmc": "context/default.wmc"
+                       }
+                   ],
+  selectedOption: {keyword: 'default'} //This sets the default value of the select in the ui
+  };
+alert("yolo1");
+  data.get( {keywords:"default"}, function(user){
+    $scope.profile = user;
+  })
+  
+  
+  alert($scope.profile);
+  
+}]; */
+
+UserController.prototype.context = function($scope,$http){
+
+var json=  [
+   {
+       "keywords": ["relief"],
+       "label": "geOrchestra World",
+       "thumbnail": "context/image/relief.png",
+       "tip": "This map displays geOrchestra instances on top of a world DEM baselayer",
+       "wmc": "context/relief.wmc"
+   },
+   {
+       "keywords": ["default"],
+       "label": "OSM Map over Western Europa",
+       "thumbnail": "context/image/default.png",
+       "tip": "Uses a layer made from regularly updated OpenStreetMap data, rendered with a GoogleMaps-inspired style.",
+       "wmc": "context/default.wmc"
+   }
+];
+
+  $scope.posts = json;
+
+  
+/*
+  $scope.showMembres = function(){
+    $http({
+      method: 'GET',
+      url: 'https://sdi.georchestra.org/mapfishapp/ws/contexts/'
+    }).then(function successCallback(response) {
+      alert('response');
+      return response;
+      
+    }, function errorCallback(response) {
+      alert('response');
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    });
+  };
+
+alert($scope.showMembres);
+ */ 
+};
+
 

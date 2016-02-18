@@ -22,71 +22,87 @@
         <div class="panel-body" ng-if="user.tab=='infos'">
           <form class="form-horizontal">
             <div class="row">
-              <div class="col-md-6">
+       <div class="col-md-6">
 
-                <div class="form-group">
-                  <label class="col-sm-4" for="uid" translate>user.login</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.uid" class="form-control" id="uid" placeholder="Login">
-                  </div>
-                </div>
+        <div class="form-group">
+         <label class="col-sm-4" for="uid" translate>user.login</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.uid" class="form-control" id="uid"
+           placeholder="Login">
+         </div>
+        </div>
 
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="commonName" translate>user.cn</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.commonName" class="form-control" id="commonName" placeholder="CommonName">
-                  </div>
-                </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="commonName" translate>user.cn</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.commonName" class="form-control"
+           id="commonName" placeholder="CommonName">
+         </div>
+        </div>
 
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="email" translate>user.mail</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.mail" type="email" class="form-control" id="email" placeholder="Email">
-                  </div>
-                </div>
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="address" translate>user.address</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.postalAddress" class="form-control" id="address" placeholder="Address">
-                  </div>
-                </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="email" translate>user.mail</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.mail" type="email" class="form-control"
+           id="email" placeholder="Email">
+         </div>
+        </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="address" translate>user.address</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.postalAddress" class="form-control"
+           id="address" placeholder="Address">
+         </div>
+        </div>
 
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="organization" translate>user.org</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.o" class="form-control" id="organization" placeholder="Organization">
-                  </div>
-                </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="organization" translate>user.org</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.o" class="form-control" id="organization"
+           placeholder="Organization">
+         </div>
+        </div>
 
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="organization" translate>user.description</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.description" class="form-control" id="description" placeholder="Description">
-                  </div>
-                </div>
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="manager" translate>user.manager</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.manager" class="form-control" id="manager" placeholder="Manager">
-                  </div>
-                </div>
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="shadowExpire" translate>user.expire</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.shadowExpire" class="form-control" id="shadowExpire" placeholder="shadowExpire">
-                  </div>
-                </div>
-                <div class="form-group form-group-sm">
-                  <label class="col-sm-4" for="preferredLanguage" translate>user.context</label>
-                  <div class="col-sm-8">
-                    <input ng-model="user.user.preferredLanguage" class="form-control" id="preferredLanguage"
-                    placeholder="preferredLanguage">
-                  </div>
-                </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="organization" translate>user.description</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.description" class="form-control"
+           id="description" placeholder="Description">
+         </div>
+        </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="manager" translate>user.manager</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.manager" class="form-control" id="manager"
+           placeholder="Manager">
+         </div>
+        </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="shadowExpire" translate>user.expire</label>
+         <div class="col-sm-8">
+          <input ng-model="user.user.shadowExpire" class="form-control"
+           id="shadowExpire" placeholder="shadowExpire">
+         </div>
+        </div>
+        <div class="form-group form-group-sm">
+         <label class="col-sm-4" for="preferredLanguage" translate>user.context</label>
+         <div class="col-sm-8">
 
-              </div>
+          <select class="form-control" id="context">
+           <option ng-model="user.user.context" id=context>{{user.user.context}}</option>
+          </select>
 
-              <div class="col-md-6">
+
+ <a class="ng-binding" ng-click="user.context()" >go</a>
+ 
+ 
+         </div>
+
+        </div>
+
+       </div>
+
+       <div class="col-md-6">
                 <div class="form-group">
                   <label class="col-sm-4" for="givenName" translate>user.password</label> <a class="ng-binding" ng-click="user.resetPassword(user.user.mail)" translate>user.reset</a>
                 </div>
