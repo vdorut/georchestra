@@ -32,6 +32,12 @@
         </servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+    
     <!-- url mapping -->
     <servlet-mapping>
         <servlet-name>ws</servlet-name>

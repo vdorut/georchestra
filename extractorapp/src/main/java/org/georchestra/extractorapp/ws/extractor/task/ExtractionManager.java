@@ -34,6 +34,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import org.georchestra.extractorapp.ws.*;
+import com.codahale.metrics.ConsoleReporter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.SharedMetricRegistries;
+import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
+import com.ryantenney.metrics.spring.config.annotation.MetricsConfigurerAdapter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,6 +108,7 @@ public class ExtractionManager {
      * @param newTask
      * @throws Exception 
      */
+    @Metered
 	public synchronized void submit(ExtractionTask extractor) {
 
 		// creates the waiting task queue ordered by priority task
