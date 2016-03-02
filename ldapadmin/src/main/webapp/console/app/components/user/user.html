@@ -89,14 +89,16 @@
          <div class="col-sm-8">
 
           <select class="form-control" id="context">
-           <option ng-model="user.user.context" id=context>{{user.user.context}}</option>
+           <option ng-model="user.user.context" id=context>{{user.user.context}}456</option>
           </select>
+        
+  
+          <select class="form-control" id="contexts" ng-model="contexts" ng-options="context.label for context in contexts">
+           <option ng-model="contexts" ng-repeat="context in user.contexts">{{context.label}}123</option> 
+          </select>
+  
 
-
- <a class="ng-binding" ng-click="user.context()" >go</a>
- 
- 
-         </div>
+        </div> 
 
         </div>
 

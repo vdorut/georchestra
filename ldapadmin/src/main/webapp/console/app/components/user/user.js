@@ -91,6 +91,10 @@ function UserController($routeParams, $q, $injector, Flash, User, Group, Email, 
         "mimeType": "image/jpeg"}
         ];
       break;
+      
+   /* case 'infos':
+      
+      break;*/
     default:
   }
 }
@@ -134,8 +138,26 @@ UserController.prototype.activate = [
     }
     return groups;
   }.bind(this), saveGroups.bind(this));
-
+ 
+  $scope.contexts =[
+                    {
+                        "keywords": ["relief"],
+                        "label": "geOrchestra World",
+                        "thumbnail": "context/image/relief.png",
+                        "tip": "This map displays geOrchestra instances on top of a world DEM baselayer",
+                        "wmc": "context/relief.wmc"
+                    },
+                    {
+                        "keywords": ["default"],
+                        "label": "OSM Map over Western Europa",
+                        "thumbnail": "context/image/default.png",
+                        "tip": "Uses a layer made from regularly updated OpenStreetMap data, rendered with a GoogleMaps-inspired style.",
+                        "wmc": "context/default.wmc"
+                    }
+                 ];
+ 
 }];
+
 
 UserController.prototype.save = function() {
   var $translate = this.$injector.get('$translate');
@@ -268,46 +290,6 @@ alert("yolo1");
   
 }]; */
 
-UserController.prototype.context = function($scope,$http){
 
-var json=  [
-   {
-       "keywords": ["relief"],
-       "label": "geOrchestra World",
-       "thumbnail": "context/image/relief.png",
-       "tip": "This map displays geOrchestra instances on top of a world DEM baselayer",
-       "wmc": "context/relief.wmc"
-   },
-   {
-       "keywords": ["default"],
-       "label": "OSM Map over Western Europa",
-       "thumbnail": "context/image/default.png",
-       "tip": "Uses a layer made from regularly updated OpenStreetMap data, rendered with a GoogleMaps-inspired style.",
-       "wmc": "context/default.wmc"
-   }
-];
-
-  $scope.posts = json;
-
-  
-/*
-  $scope.showMembres = function(){
-    $http({
-      method: 'GET',
-      url: 'https://sdi.georchestra.org/mapfishapp/ws/contexts/'
-    }).then(function successCallback(response) {
-      alert('response');
-      return response;
-      
-    }, function errorCallback(response) {
-      alert('response');
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-    });
-  };
-
-alert($scope.showMembres);
- */ 
-};
 
 
