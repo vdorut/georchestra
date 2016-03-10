@@ -40,6 +40,14 @@ geoserver_geodata:
   volumes:
     - geoserver_geodata:/home/geoserver/data
 
+graphite:
+  image: nickstenning/graphite
+  ports:
+    - "89:80"
+    - "2003:2003"
+    - "7002:7002"
+    - "3000:3000"
+  
 # geOrchestra images
     
 geoserver:
@@ -75,10 +83,12 @@ mapfishapp:
 
 extractorapp:
   image: georchestra/extractorapp
+  ports:
+    - "1098:1099"
   links:
     - database
     - smtp
-
+    - graphite
 header:
   image: georchestra/header
 
@@ -96,4 +106,5 @@ geonetwork:
   links:
     - database
     - ldap
+
 

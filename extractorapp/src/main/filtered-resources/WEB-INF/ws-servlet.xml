@@ -84,6 +84,11 @@
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    <!-- metrics bean -->
+    <bean id="metricsConfiguration" class="org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass">
+    
+    
+    </bean>
 
     <bean id="georchestraConfiguration" class="org.georchestra.commons.configuration.GeorchestraConfiguration">
         <constructor-arg value="extractorapp" />

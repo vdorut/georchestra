@@ -26,6 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.codahale.metrics.annotation.Timed;
+import com.codahale.metrics.annotation.Metered;
+import org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass;
+
+
 /**
  * @author Mauricio Pazos
  *
@@ -44,7 +49,7 @@ final class ExtractorUpdateAllPrioritiesRequest {
 		
 		uuidList = uuids;
 	}
-
+@Timed(name = "asList")
 	public List<String> asList() {
 
     	return uuidList;

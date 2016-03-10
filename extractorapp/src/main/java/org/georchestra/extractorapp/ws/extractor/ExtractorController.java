@@ -55,11 +55,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.ServletContextAware;
 
+import org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass;
+import com.codahale.metrics.annotation.Metered;
+import com.codahale.metrics.annotation.Timed;
+
 /**
  * Controller for the Extractor
  *
  * @author jeichar
  */
+@Timed(name = "ExtractorController")
 @Controller
 public class ExtractorController implements ServletContextAware {
     public static final String EXTRACTION_ZIP_EXT = "-extraction.zip";
@@ -95,7 +100,9 @@ public class ExtractorController implements ServletContextAware {
     @Autowired
     private GeorchestraConfiguration georConfig;
 
+
     public void validateConfig() {
+
         if ((georConfig != null) && (georConfig.activated())) {
             LOG.info("geOrchestra datadir: reconfiguring bean ...");
             servletUrl = georConfig.getProperty("servletUrl");
@@ -124,7 +131,7 @@ public class ExtractorController implements ServletContextAware {
             }
         }
     }
-
+    @Timed(name = "results")
     @RequestMapping(value = RESULTS_MAPPING, method = RequestMethod.GET)
     public void results(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String uuid = request.getParameter(UUID_PARAM);
@@ -150,7 +157,7 @@ public class ExtractorController implements ServletContextAware {
             response.sendError(404, "Requested file not found");
         }
     }
-
+    @Timed(name = "extract")
     @RequestMapping(value = EXTRACTOR_MAPPING, method = RequestMethod.POST)
     public void extract(HttpServletRequest request, HttpServletResponse response) throws Exception {
         doExtraction(false, request, response);
@@ -168,6 +175,7 @@ public class ExtractorController implements ServletContextAware {
      * @param response
      * @throws Exception
      */
+    @Timed(name = "getTaskQueue")
     @RequestMapping(value = EXTRACTOR_TASKS, method = RequestMethod.GET)
     public void getTaskQueue(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -204,6 +212,7 @@ public class ExtractorController implements ServletContextAware {
      * @param jsonTask
      * @throws Exception
      */
+    @Timed(name ="updateTask")
     @RequestMapping(value = EXTRACTOR_TASKS + "/*", method = RequestMethod.PUT)
     public void updateTask(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -246,6 +255,7 @@ public class ExtractorController implements ServletContextAware {
      * @return the task id
      * @throws TaskNotFoundException
      */
+    
     private TaskDescriptor findTask(final String id) throws TaskNotFoundException {
 
         ExtractionTask foundTask = extractionManager.findTask(id);

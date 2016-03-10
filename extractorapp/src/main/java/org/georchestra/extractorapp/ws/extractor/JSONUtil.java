@@ -23,6 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.codahale.metrics.annotation.Timed;
+
+
 /**
  * Utility method to manage JSON object
  * 
@@ -38,6 +41,7 @@ final class JSONUtil {
     /**
      * Takes a string and parses it to a JSON object structure
      */
+	@Timed
     public static JSONObject parseStringToJSon(String jsonData) throws JSONException {
         final String trimmed = jsonData.trim ();
         final JSONTokener tokener = new JSONTokener (trimmed);

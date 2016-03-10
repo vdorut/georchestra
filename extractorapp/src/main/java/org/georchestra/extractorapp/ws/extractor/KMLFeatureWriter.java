@@ -31,12 +31,18 @@ import org.geotools.xml.Encoder;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.util.ProgressListener;
 
+import org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass;
+import com.codahale.metrics.annotation.Metered;
+import com.codahale.metrics.annotation.Timed;
+
+
 /**
  * This class implements the KML file writing strategy
  *
  * @author Florent Gravin
  *
  */
+@Timed(name="KMLFeatureWriter")
 final class KMLFeatureWriter extends FileFeatureWriter {
 
 	/**
@@ -47,6 +53,7 @@ final class KMLFeatureWriter extends FileFeatureWriter {
 	 * @param basedir		output folder
 	 * @param features		input the set of Features to write
 	 */
+	@Timed(name="KMLFeatureWriter")
 	public KMLFeatureWriter(
 			ProgressListener progresListener,
 			SimpleFeatureType schema,
@@ -79,6 +86,7 @@ final class KMLFeatureWriter extends FileFeatureWriter {
 	 * @throws IOException
 	 */
 	@Override
+	@Timed(name="generateFiles")
 	public File[] generateFiles() throws IOException {
 
 		File[] files = null;

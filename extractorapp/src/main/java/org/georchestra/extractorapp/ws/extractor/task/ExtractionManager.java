@@ -40,6 +40,9 @@ import org.apache.commons.logging.LogFactory;
 import org.georchestra.commons.configuration.GeorchestraConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.codahale.metrics.annotation.Timed;
+import com.codahale.metrics.annotation.Metered;
+
 
 public class ExtractionManager {
 	
@@ -87,7 +90,7 @@ public class ExtractionManager {
         executor = new PriorityThreadPoolExecutor(minThreads, maxExtractions, 5,
                 TimeUnit.SECONDS, workQueue, threadFactory);
     }
-
+    
     public void setMaxExtractions(int maxExtractions) {
         this.maxExtractions = maxExtractions;
     }
@@ -102,6 +105,7 @@ public class ExtractionManager {
      * @param newTask
      * @throws Exception 
      */
+    @Timed(name ="submit")
 	public synchronized void submit(ExtractionTask extractor) {
 
 		// creates the waiting task queue ordered by priority task

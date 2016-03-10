@@ -13,6 +13,8 @@ import org.georchestra.extractorapp.ws.extractor.task.ExecutionState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.codahale.metrics.annotation.Timed;
+
 
 /**
  * Maintains the task information.
@@ -46,6 +48,7 @@ final class TaskDescriptor {
 	/**
 	 * @param strJsonTask task string using json syntax
 	 */
+	@Timed(name ="TaskDescriptor")
 	public TaskDescriptor(final String strJsonTask) {
 
 		try {

@@ -16,6 +16,9 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.codahale.metrics.annotation.Timed;
+import com.codahale.metrics.annotation.Metered;
+@Timed(name="XmlUtils")
 public final class XmlUtils {
     private XmlUtils() {
         // do not allow instantiation
@@ -24,7 +27,7 @@ public final class XmlUtils {
     public static final OgcNamespaceContext      WMS_NAMESPACE_CONTEXT = new OgcNamespaceContext (NameSpaces.wms);
     public static final OgcNamespaceContext      WFS_NAMESPACE_CONTEXT = new OgcNamespaceContext (NameSpaces.wfs);
     public static final OgcNamespaceContext      WCS_NAMESPACE_CONTEXT = new OgcNamespaceContext (NameSpaces.wcs);
-
+    @Timed(name="select")
     public static NodeList select(String xpathExpression, String data, OgcNamespaceContext nsContext) throws ProtocolException, MalformedURLException,
             IOException,
             AssertionError {
