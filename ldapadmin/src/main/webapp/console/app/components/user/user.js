@@ -139,7 +139,7 @@ UserController.prototype.activate = [
     return groups;
   }.bind(this), saveGroups.bind(this));
  
-  $scope.contexts =[
+  this.contexts =[
                     {
                         "keywords": ["relief"],
                         "label": "geOrchestra World",
@@ -202,8 +202,7 @@ UserController.prototype.sendMail = function() {
 }
 
 UserController.prototype.resetPassword = function(user) {
-  
-  window.location.href=['/ldapadmin/account/passwordRecovery?email='+encodeURIComponent(user)];
+  return ['/ldapadmin/account/passwordRecovery?email='+encodeURIComponent(user)];
 }
 
 

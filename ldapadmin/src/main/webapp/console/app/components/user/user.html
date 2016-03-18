@@ -88,13 +88,11 @@
          <label class="col-sm-4" for="preferredLanguage" translate>user.context</label>
          <div class="col-sm-8">
 
-          <select class="form-control" id="context">
-           <option ng-model="user.user.context" id=context>{{user.user.context}}456</option>
-          </select>
-        
+         
   
-          <select class="form-control" id="contexts" ng-model="contexts" ng-options="context.label for context in contexts">
-           <option ng-model="contexts" ng-repeat="context in user.contexts">{{context.label}}123</option> 
+          <select class="form-control" id="contexts" ng-model="user.user.context" >
+          <option value="" translate>user.lastcontext</option>
+           <option value="{{context.wmc}}" ng-repeat="context in user.contexts">{{context.label}}</option> 
           </select>
   
 
@@ -106,9 +104,9 @@
 
        <div class="col-md-6">
                 <div class="form-group">
-                  <label class="col-sm-4" for="givenName" translate>user.password</label> <a class="ng-binding" ng-click="user.resetPassword(user.user.mail)" translate>user.reset</a>
+                  <label class="col-sm-4" for="givenName" translate>user.password</label> <a href ng-click="user.resetPassword(user.user.mail)" class="ng-binding" translate>user.reset</a>
                 </div>
-
+<a href ="/ldapadmin/account/passwordRecovery?email=" > yolo</a>/>
                 <div class="form-group form-group-sm">
                   <label class="col-sm-4" for="givenName" translate>user.gn</label>
                   <div class="col-sm-8">
