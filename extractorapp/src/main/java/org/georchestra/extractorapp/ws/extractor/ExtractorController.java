@@ -55,7 +55,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.ServletContextAware;
 
-import org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass;
+import org.georchestra.extractorapp.ws.extractor.ExtractorMetricsConfiguringClass;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 

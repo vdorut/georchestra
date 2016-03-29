@@ -41,7 +41,7 @@ geoserver_geodata:
     - geoserver_geodata:/home/geoserver/data
 
 graphite:
-  image: nickstenning/graphite
+  image: productops/graphite-grafana
   ports:
     - "89:80"
     - "2003:2003"

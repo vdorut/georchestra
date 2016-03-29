@@ -41,7 +41,7 @@ import org.georchestra.extractorapp.ws.extractor.OGRFeatureWriter.FileFormat;
 import org.georchestra.extractorapp.ws.extractor.WfsExtractor.GeomType;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass;
+import org.georchestra.extractorapp.ws.extractor.ExtractorMetricsConfiguringClass;
 
 import com.codahale.metrics.annotation.Timed;
 

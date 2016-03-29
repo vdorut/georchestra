@@ -31,7 +31,7 @@ import org.geotools.xml.Encoder;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.util.ProgressListener;
 
-import org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass;
+import org.georchestra.extractorapp.ws.extractor.ExtractorMetricsConfiguringClass;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 

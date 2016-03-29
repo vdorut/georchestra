@@ -85,9 +85,8 @@
         <property name="suffix" value=".jsp"/>
     </bean>
     <!-- metrics bean -->
-    <bean id="metricsConfiguration" class="org.georchestra.extractorapp.ws.extractor.SpringConfiguringClass">
-    
-    
+    <bean id="metricsConfiguration" class="org.georchestra.extractorapp.ws.extractor.ExtractorMetricsConfiguringClass">
+       
     </bean>
 
     <bean id="georchestraConfiguration" class="org.georchestra.commons.configuration.GeorchestraConfiguration">
