@@ -1,5 +1,23 @@
-package org.georchestra.ogcservstatistics.log4j;
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
+package org.georchestra.ogcservstatistics.log4j;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -39,24 +57,33 @@ public class OGCServiceMessageFormatter {
 		// utility class
 	}
 
-	public static String format(final String user, final String request, final String org){
-			return format(user, new Date(), request, org);
+	public static String format(final String user, final String request, final String org,String [] roles){
+			return format(user, new Date(), request, org,roles);
 	}
+	/*
+	public static String format(final String user,final String request, String org) { // roles null  ???
+		
+			return format(user, new Date(), request, org,null);
+
+	}
+
+	*/
 	/**
 	 * Builds a formated string that can be recognized by the OGCServicesAppender.
 	 * <pre>
 	 * Produced format:
 	 * 
-	 * user|yyyy-MM-dd|request
+	 * user|yyyy-MM-dd|request|roles
 	 * 
 	 * </pre>
 	 * @param user
 	 * @param date
 	 * @param request
+	 * @param roles
 	 * 
 	 * @return The ogcservice message
 	 */
-	public static String format(final String user, final Date date, final String request, final String org){
+	public static String format(final String user, final Date date, final String request, final String org,final String [] roles){
 		
 		if((user == null)|| "".equals(user) ){
 			throw new IllegalArgumentException("user cannot be null");
@@ -67,9 +94,14 @@ public class OGCServiceMessageFormatter {
 		if((request == null)|| "".equals(request) ){
 			throw new IllegalArgumentException("request cannot be null");
 		}
+		if(roles == null){
+			roles[0] = "";
+		}
 		// org can be null
 		
 		// appends user
+
+		
 		StringBuilder ogcLogBuilder = new StringBuilder(user);
 		ogcLogBuilder.append(SEPARATOR);
 		
@@ -84,9 +116,23 @@ public class OGCServiceMessageFormatter {
 		
 		// appends ogc service org
 		ogcLogBuilder.append(org);
+		ogcLogBuilder.append(SEPARATOR);
 		
+		// appends ogc service roles
+		StringBuilder rolesBuilder = new StringBuilder();
+		int i=0;
+		for(String s : roles) {
+		   if (i > 0) {
+			   rolesBuilder.append(",");
+		   }
+		   rolesBuilder.append(s);
+		   i++;
+		}
+		
+		ogcLogBuilder.append(rolesBuilder.toString());
+
 	    final String ogcStatisticLog = ogcLogBuilder.toString();
-		
+	    
 	    // log additional information to test the system
 	    log(ogcLogBuilder);
 		

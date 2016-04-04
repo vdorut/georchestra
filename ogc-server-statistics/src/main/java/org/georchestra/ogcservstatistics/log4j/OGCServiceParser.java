@@ -1,6 +1,22 @@
-/**
- * 
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.georchestra.ogcservstatistics.log4j;
 
 import java.io.UnsupportedEncodingException;
@@ -176,14 +192,18 @@ final class OGCServiceParser {
 		String service = parseService(request);
 		String ogcReq = parseRequest(request).toLowerCase();
 		
-		// parses org (it is optional)
+		// parses org (it is optional) and sec roles
 		String org;
-		if(splittedMessage.length == 4){
+		String roles;
+		if(splittedMessage.length == 5){
 			org = splittedMessage[3];
-		} else {
+			roles = splittedMessage[4];
+		} else { // missing case
 			org = "";
+			roles = "";
 		}
 		
+
 		// for each layer adds a log to the list
 		List<Map<String, Object>> logList = new LinkedList<Map<String,Object>>(); 
 		List<String> layerList = parseLayer(request);
@@ -197,6 +217,7 @@ final class OGCServiceParser {
 			log.put("layer", "" );
 			log.put("request", ogcReq );
 			log.put("org", org);
+			log.put("secrole", roles);
 			
 			logList.add(log);
 		} else{ // there are one ore more layers
@@ -210,6 +231,7 @@ final class OGCServiceParser {
 				log.put("layer", layer.toLowerCase() );
 				log.put("request", ogcReq );
 				log.put("org", org);
+				log.put("secrole", roles);
 				
 				logList.add(log);
 			}

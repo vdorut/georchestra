@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.georchestra.security;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -637,8 +656,18 @@ public class Proxy {
                 }
                 // no OGC SERVICE log if request going through /proxy/?url=
                 if (!request.getRequestURI().startsWith("/sec/proxy/")) {
-                    statsLogger.info(OGCServiceMessageFormatter.format(authentication.getName(), sURL, org));
+                	String [] roles = null;
+                	try{
+                	Header[] rolesHeaders = proxyingRequest.getHeaders("sec-roles");
+                	roles = rolesHeaders[0].getValue().split(";");
+                	
+                	} catch (Exception e) {
+                        logger.error("Unable to compute roles", e);
+                    }
+                    statsLogger.info(OGCServiceMessageFormatter.format(authentication.getName(), sURL, org, roles));
+                
                 }
+                	
             } catch (Exception e) {
                 logger.error("Unable to log the request into the statistics logger", e);
             }
