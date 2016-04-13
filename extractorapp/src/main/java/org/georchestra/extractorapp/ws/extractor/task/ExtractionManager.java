@@ -90,7 +90,7 @@ public class ExtractionManager {
         executor = new PriorityThreadPoolExecutor(minThreads, maxExtractions, 5,
                 TimeUnit.SECONDS, workQueue, threadFactory);
     }
-    
+
     public void setMaxExtractions(int maxExtractions) {
         this.maxExtractions = maxExtractions;
     }
@@ -175,6 +175,7 @@ public class ExtractionManager {
      * 
      * @param newOrder a list of the task's uuids
      */
+    @Timed(name="updateAllPriorities")
     public synchronized void updateAllPriorities(final List<String> newOrder) {
         executor.purge();
         Collection<ExtractionTask> newWaitingTasks = new TreeSet<ExtractionTask>(new Comparator<ExtractionTask>(){

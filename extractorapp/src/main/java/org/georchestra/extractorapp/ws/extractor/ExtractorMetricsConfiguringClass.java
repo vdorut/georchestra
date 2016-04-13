@@ -32,7 +32,7 @@ public class ExtractorMetricsConfiguringClass extends MetricsConfigurerAdapter {
 	}
 
 	@PostConstruct
-	public void init() {
+	public void initMetrics() {
 		// JVM Metrics
 		metricRegistry.register("jvm.memory", new MemoryUsageGaugeSet());
 		metricRegistry.register("jvm.garbage", new GarbageCollectorMetricSet());
@@ -40,12 +40,8 @@ public class ExtractorMetricsConfiguringClass extends MetricsConfigurerAdapter {
 		metricRegistry.register("jvm.files", new FileDescriptorRatioGauge());
 		metricRegistry.register("jvm.buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
 		metricRegistry.register("jvm.class", new ClassLoadingGaugeSet());
-		// metricRegistry.register("jvm.deadrtead",new
-		// ThreadDeadlockDetector(ManagementFactory.getThreadMXBean()));
 
-	//	registerReporter(ConsoleReporter.forRegistry(metricRegistry).build()).start(1, TimeUnit.SECONDS);
-		
-//graphite reporter
+		// graphite reporter
 		final Graphite graphite = new Graphite(new InetSocketAddress("georchestra_graphite_1", 2003));
 		final GraphiteReporter reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith("extractor-app")
 				.convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).filter(MetricFilter.ALL)
